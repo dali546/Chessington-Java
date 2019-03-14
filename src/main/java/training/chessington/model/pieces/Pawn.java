@@ -18,6 +18,7 @@ public class Pawn extends AbstractPiece {
     }
 
     private List<Move> BlackMoves(Coordinates from, Board board) {
+        if (from.getRow()==7) return new ArrayList<>();
         if (board.get(new Coordinates(from.getRow() + 1, from.getCol())) != null) return new ArrayList<>();
         return new ArrayList<Move>() {{
             add(new Move(from, from.plus(1, 0)));
@@ -26,6 +27,7 @@ public class Pawn extends AbstractPiece {
     }
 
     private List<Move> WhiteMoves(Coordinates from, Board board) {
+        if (from.getRow()==0) return new ArrayList<>();
         if (board.get(new Coordinates(from.getRow() - 1, from.getCol())) != null) return new ArrayList<>();
         return new ArrayList<Move>() {{
             add(new Move(from, from.plus(-1, 0)));
