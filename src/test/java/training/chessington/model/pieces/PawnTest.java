@@ -282,4 +282,20 @@ public class PawnTest {
         Coordinates otherDiagonal = pawnCoords.plus(1, -1);
         assertThat(moves).doesNotContain(new Move(pawnCoords, otherDiagonal));
     }
+
+    @Test
+    public void pawnCannotMoveDiagonallyOffBoard(){
+        Board board = Board.empty();
+        Piece pawn = new Pawn(PlayerColour.WHITE);
+        Piece enemyPawn = new Pawn(PlayerColour.BLACK);
+        Coordinates pawnCoords = new Coordinates(3,0);
+        Coordinates enemyPawnCoords = new Coordinates(4,1);
+        board.placePiece(pawnCoords,pawn);
+        board.placePiece(enemyPawnCoords,enemyPawn);
+
+        List<Move> moves = pawn.getAllowedMoves(pawnCoords,board);
+
+        Coordinates diag = pawnCoords.plus(1, -1);
+        assertThat(moves).doesNotContain(new Move(pawnCoords, diag));
+    }
 }
