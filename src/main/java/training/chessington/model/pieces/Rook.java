@@ -41,8 +41,8 @@ public class Rook extends AbstractPiece {
 
         for (int i = 1; i < Game.SIZE; i++) {
             int rowOffset = rowDir * i, colOffset = colDir * i;
-            if (pieceNotObstructedOffsetXY(from, board, rowOffset, colOffset)) moves.add(new Move(from, from.plus(rowOffset, colOffset)));
-            else if (enemyPieceAtOffsetXY(from, board, rowOffset, colOffset)) {
+            if (pieceNotObstructedOffsetXY(board, from.plus(rowOffset, colOffset))) moves.add(new Move(from, from.plus(rowOffset, colOffset)));
+            else if (enemyPieceAtOffsetXY(board, from.plus(rowOffset, colOffset))) {
                 moves.add(new Move(from, from.plus(rowOffset, colOffset)));
                 break;
             } else break;

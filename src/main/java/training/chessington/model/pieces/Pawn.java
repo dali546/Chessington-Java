@@ -19,7 +19,7 @@ public class Pawn extends AbstractPiece {
         Move MOVE_CAPTURE_RIGHT = new Move(from, colour == PlayerColour.WHITE ? from.plus(-1, 1) : from.plus(1, -1));
         Move MOVE_CAPTURE_LEFT = new Move(from, colour == PlayerColour.WHITE ? from.plus(-1, -1) : from.plus(1, 1));
         List<Move> moves = new ArrayList<>();
-        if (pieceNotObstructedOffsetXY(from, board, colourise(1), 0)) moves.add(MOVE_1);
+        if (pieceNotObstructedOffsetXY(board, from.plus(colourise(1), 0))) moves.add(MOVE_1);
         if (pawnAtStartPosition(from, board)) moves.add(MOVE_2);
         if (canCaptureEnemyRight(from, board)) moves.add(MOVE_CAPTURE_RIGHT);
         if (canCaptureEnemyLeft(from, board)) moves.add(MOVE_CAPTURE_LEFT);
@@ -38,7 +38,7 @@ public class Pawn extends AbstractPiece {
     }
 
     private boolean pawnAtStartPosition(Coordinates from, Board board) {
-        return pieceNotObstructedOffsetXY(from, board, colourise(1), 0) && pieceNotObstructedOffsetXY(from, board, colourise(2), 0) &&
+        return pieceNotObstructedOffsetXY(board, from.plus(colourise(1), 0)) && pieceNotObstructedOffsetXY(board, from.plus(colourise(2), 0)) &&
                 (colour == PlayerColour.WHITE ? from.getRow() == 6 : from.getRow() == 1);
     }
 

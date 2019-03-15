@@ -30,14 +30,12 @@ public abstract class AbstractPiece implements Piece {
     }
 
     //Checks if there is no piece xy spaces in-front of current piece
-    boolean pieceNotObstructedOffsetXY(Coordinates from, Board board, int row, int col) {
-        Coordinates squareInFront = from.plus(row, col);
-        return board.isNotOutOfBound(squareInFront) && board.get(squareInFront) == null;
+    boolean pieceNotObstructedOffsetXY(Board board, Coordinates coords) {
+        return board.isNotOutOfBound(coords) && board.get(coords) == null;
     }
 
-    boolean enemyPieceAtOffsetXY(Coordinates from, Board board, int row, int col) {
-        Coordinates plus = from.plus(row, col);
-        return board.isNotOutOfBound(plus) && board.get(plus).getColour() != colour;
+    boolean enemyPieceAtOffsetXY(Board board, final Coordinates coords) {
+        return board.isNotOutOfBound(coords) && board.get(coords).getColour() != colour;
     }
 
     int colourise(int offset) {
