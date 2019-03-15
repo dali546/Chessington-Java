@@ -1,8 +1,9 @@
 package training.chessington.model.pieces;
 
-import training.chessington.model.Board;
-import training.chessington.model.Coordinates;
-import training.chessington.model.PlayerColour;
+import training.chessington.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class AbstractPiece implements Piece {
 
@@ -40,6 +41,21 @@ public abstract class AbstractPiece implements Piece {
 
     int colourise(int offset) {
         return colour == PlayerColour.WHITE ? -offset : offset;
+    }
+
+
+    protected List<Move> getMoves(Coordinates from, Board board, int rowDir, int colDir) {
+        List<Move> moves = new ArrayList<>();
+
+        for (int i = 1; i < Game.SIZE; i++) {
+            int rowOffset = rowDir * i, colOffset = colDir * i;
+            if (pieceNotObstructedOffsetXY(board, from.plus(rowOffset, colOffset))) moves.add(new Move(from, from.plus(rowOffset, colOffset)));
+            else if (enemyPieceAtOffsetXY(board, from.plus(rowOffset, colOffset))) {
+                moves.add(new Move(from, from.plus(rowOffset, colOffset)));
+                break;
+            } else break;
+        }
+        return moves;
     }
 
 }

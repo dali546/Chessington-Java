@@ -1,9 +1,6 @@
 package training.chessington.model.pieces;
 
-import training.chessington.model.Board;
-import training.chessington.model.Coordinates;
-import training.chessington.model.Move;
-import training.chessington.model.PlayerColour;
+import training.chessington.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +12,28 @@ public class Bishop extends AbstractPiece {
 
     @Override
     public List<Move> getAllowedMoves(Coordinates from, Board board) {
-        return new ArrayList<>();
+        List<Move> moves = new ArrayList<>();
+        moves.addAll(bottomLeft(from, board));
+        moves.addAll(bottomRight(from, board));
+        moves.addAll(topRight(from, board));
+        moves.addAll(topLeft(from, board));
+        return moves;
     }
+
+    private List<Move> bottomLeft(Coordinates from, Board board) {
+        return getMoves(from,board,1,-1);
+    }
+
+    private List<Move> bottomRight(Coordinates from, Board board) {
+        return getMoves(from,board,1,1);
+    }
+
+    private List<Move> topRight(Coordinates from, Board board) {
+        return getMoves(from, board, -1, 1);
+    }
+
+    private List<Move> topLeft(Coordinates from, Board board) {
+        return getMoves(from,board,-1,-1);
+    }
+
 }
