@@ -35,7 +35,7 @@ public abstract class AbstractPiece implements Piece {
         return board.isNotOutOfBound(coords) && board.get(coords) == null;
     }
 
-    boolean enemyPieceAtOffsetXY(Board board, final Coordinates coords) {
+    private boolean enemyPieceAtOffsetXY(Board board, final Coordinates coords) {
         return board.isNotOutOfBound(coords) && board.get(coords).getColour() != colour;
     }
 
@@ -44,7 +44,7 @@ public abstract class AbstractPiece implements Piece {
     }
 
 
-    protected List<Move> getMoves(Coordinates from, Board board, int rowDir, int colDir) {
+    protected List<Move> getMovesInDirection(Coordinates from, Board board, int rowDir, int colDir) {
         List<Move> moves = new ArrayList<>();
 
         for (int i = 1; i < Game.SIZE; i++) {
@@ -56,6 +56,11 @@ public abstract class AbstractPiece implements Piece {
             } else break;
         }
         return moves;
+    }
+
+    protected boolean isValidMove(Board board, Coordinates coords) {
+        if (pieceNotObstructedOffsetXY(board, coords)) return true;
+        return enemyPieceAtOffsetXY(board, coords);
     }
 
 }

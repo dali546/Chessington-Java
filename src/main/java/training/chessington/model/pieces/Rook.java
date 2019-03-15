@@ -21,18 +21,18 @@ public class Rook extends AbstractPiece {
     }
 
     private List<Move> downMoves(Coordinates from, Board board) {
-        return getMoves(from,board,1,0);
+        return getMovesInDirection(from,board,1,0);
     }
 
     private List<Move> upMoves(Coordinates from, Board board) {
-        return getMoves(from,board,-1,0);
+        return getMovesInDirection(from,board,-1,0);
     }
 
     private List<Move> rightMoves(Coordinates from, Board board) {
-        return getMoves(from, board, 0, 1);
+        return getMovesInDirection(from, board, 0, 1);
     }
 
     private List<Move> leftMoves(Coordinates from, Board board) {
-        return getMoves(from,board,0,-1);
+        return getMovesInDirection(from,board,0,-1);
     }
 }

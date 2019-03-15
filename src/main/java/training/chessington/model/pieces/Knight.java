@@ -25,8 +25,4 @@ public class Knight extends AbstractPiece {
         return moves;
     }
 
-    private boolean isValidMove(Board board, Coordinates coords) {
-        if (pieceNotObstructedOffsetXY(board, coords)) return true;
-        return enemyPieceAtOffsetXY(board, coords);
-    }
 }

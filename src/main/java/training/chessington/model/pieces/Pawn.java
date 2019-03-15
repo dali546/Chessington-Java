@@ -23,17 +23,17 @@ public class Pawn extends AbstractPiece {
         if (pawnAtStartPosition(from, board)) moves.add(MOVE_2);
         if (canCaptureEnemyRight(from, board)) moves.add(MOVE_CAPTURE_RIGHT);
         if (canCaptureEnemyLeft(from, board)) moves.add(MOVE_CAPTURE_LEFT);
-        if (pawnReachedEndOfBoard(from)) moves.clear();
+        if (!board.isNotOutOfBound(from)) moves.clear();
         return moves;
     }
 
     private boolean canCaptureEnemyLeft(Coordinates from, Board board) {
-        Coordinates captureLeft = (colour == PlayerColour.WHITE) ? from.plus(-1, -1) : from.plus(1, 1);
+        Coordinates captureLeft = from.plus(colourise(1), colourise(1));
         return board.isNotOutOfBound(captureLeft) && board.get(captureLeft) != null && board.get(captureLeft).getColour() != colour;
     }
 
     private boolean canCaptureEnemyRight(Coordinates from, Board board) {
-        Coordinates captureRight = (colour == PlayerColour.WHITE) ? from.plus(-1, 1) : from.plus(1, -1);
+        Coordinates captureRight = from.plus(colourise(1), colourise(-1));
         return board.isNotOutOfBound(captureRight) && board.get(captureRight) != null && board.get(captureRight).getColour() != colour;
     }
 
@@ -42,7 +42,4 @@ public class Pawn extends AbstractPiece {
                 (colour == PlayerColour.WHITE ? from.getRow() == 6 : from.getRow() == 1);
     }
 
-    private boolean pawnReachedEndOfBoard(Coordinates from) {
-        return (colour == PlayerColour.WHITE) ? from.getRow() == 0 : from.getRow() == 7;
-    }
 }

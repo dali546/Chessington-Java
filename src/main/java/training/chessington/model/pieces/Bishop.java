@@ -21,19 +21,19 @@ public class Bishop extends AbstractPiece {
     }
 
     private List<Move> bottomLeft(Coordinates from, Board board) {
-        return getMoves(from,board,1,-1);
+        return getMovesInDirection(from,board,1,-1);
     }
 
     private List<Move> bottomRight(Coordinates from, Board board) {
-        return getMoves(from,board,1,1);
+        return getMovesInDirection(from,board,1,1);
     }
 
     private List<Move> topRight(Coordinates from, Board board) {
-        return getMoves(from, board, -1, 1);
+        return getMovesInDirection(from, board, -1, 1);
     }
 
     private List<Move> topLeft(Coordinates from, Board board) {
-        return getMoves(from,board,-1,-1);
+        return getMovesInDirection(from,board,-1,-1);
     }
 
 }
