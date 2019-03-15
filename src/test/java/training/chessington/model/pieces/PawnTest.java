@@ -292,7 +292,6 @@ public class PawnTest {
         Coordinates enemyPawnCoords = new Coordinates(4,1);
         board.placePiece(pawnCoords,pawn);
         board.placePiece(enemyPawnCoords,enemyPawn);
-
         List<Move> moves = pawn.getAllowedMoves(pawnCoords,board);
 
         Coordinates diag = pawnCoords.plus(1, -1);

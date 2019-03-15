@@ -19,7 +19,7 @@ public class Pawn extends AbstractPiece {
         Move MOVE_CAPTURE_RIGHT = new Move(from, colour == PlayerColour.WHITE ? from.plus(-1, 1) : from.plus(1, -1));
         Move MOVE_CAPTURE_LEFT = new Move(from, colour == PlayerColour.WHITE ? from.plus(-1, -1) : from.plus(1, 1));
         List<Move> moves = new ArrayList<>();
-        if (pawnNotObstructedInFrontByX(from, board, 1)) moves.add(MOVE_1);
+        if (pieceNotObstructedOffsetXY(from, board, colourise(1), 0)) moves.add(MOVE_1);
         if (pawnAtStartPosition(from, board)) moves.add(MOVE_2);
         if (canCaptureEnemyRight(from, board)) moves.add(MOVE_CAPTURE_RIGHT);
         if (canCaptureEnemyLeft(from, board)) moves.add(MOVE_CAPTURE_LEFT);
@@ -29,25 +29,16 @@ public class Pawn extends AbstractPiece {
 
     private boolean canCaptureEnemyLeft(Coordinates from, Board board) {
         Coordinates captureLeft = (colour == PlayerColour.WHITE) ? from.plus(-1, -1) : from.plus(1, 1);
-        return isNotOutOfBound(captureLeft) && board.get(captureLeft) != null && board.get(captureLeft).getColour() != colour;
+        return board.isNotOutOfBound(captureLeft) && board.get(captureLeft) != null && board.get(captureLeft).getColour() != colour;
     }
 
     private boolean canCaptureEnemyRight(Coordinates from, Board board) {
         Coordinates captureRight = (colour == PlayerColour.WHITE) ? from.plus(-1, 1) : from.plus(1, -1);
-        return isNotOutOfBound(captureRight) && board.get(captureRight) != null && board.get(captureRight).getColour() != colour;
-    }
-
-    private boolean pawnNotObstructedInFrontByX(Coordinates from, Board board, int x) {
-        Coordinates squareInFront = (colour == PlayerColour.WHITE) ? from.plus(-x, 0) : from.plus(x, 0);
-        return isNotOutOfBound(squareInFront) && board.get(squareInFront) == null;
-    }
-
-    private boolean isNotOutOfBound(Coordinates coord) {
-        return (coord.getRow() <= 7 && coord.getRow() >= 0) && (coord.getCol() >= 0 && coord.getCol() <= 7);
+        return board.isNotOutOfBound(captureRight) && board.get(captureRight) != null && board.get(captureRight).getColour() != colour;
     }
 
     private boolean pawnAtStartPosition(Coordinates from, Board board) {
-        return pawnNotObstructedInFrontByX(from, board, 1) && pawnNotObstructedInFrontByX(from, board, 2) &&
+        return pieceNotObstructedOffsetXY(from, board, colourise(1), 0) && pieceNotObstructedOffsetXY(from, board, colourise(2), 0) &&
                 (colour == PlayerColour.WHITE ? from.getRow() == 6 : from.getRow() == 1);
     }
 

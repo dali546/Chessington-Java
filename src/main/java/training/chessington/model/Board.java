@@ -49,4 +49,8 @@ public class Board {
     public void placePiece(Coordinates coords, Piece piece) {
         board[coords.getRow()][coords.getCol()] = piece;
     }
+
+    public boolean isNotOutOfBound(Coordinates coord) {
+        return (coord.getRow() <= 7 && coord.getRow() >= 0) && (coord.getCol() >= 0 && coord.getCol() <= 7);
+    }
 }
