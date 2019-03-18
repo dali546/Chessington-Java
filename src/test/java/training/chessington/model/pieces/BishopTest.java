@@ -1,10 +1,7 @@
 package training.chessington.model.pieces;
 
 import org.junit.Test;
-import training.chessington.model.Board;
-import training.chessington.model.Coordinates;
-import training.chessington.model.Move;
-import training.chessington.model.PlayerColour;
+import training.chessington.model.*;
 
 import java.util.List;
 
@@ -15,11 +12,12 @@ public class BishopTest {
     @Test
     public void bishopCanMoveOnAnEmptyBoard() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece bishop = new Bishop(PlayerColour.BLACK);
         Coordinates coordinates = new Coordinates(2, 2);
         board.placePiece(coordinates, bishop);
 
-        List<Move> moves = bishop.getAllowedMoves(coordinates, board);
+        List<Move> moves = bishop.getAllowedMoves(coordinates, game);
 
         assertThat(moves).containsExactlyInAnyOrder(
                 new Move(coordinates, coordinates.plus(-1, -1)),
@@ -39,6 +37,7 @@ public class BishopTest {
     @Test
     public void bishopBlockedByFriendly() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece bishop = new Bishop(PlayerColour.BLACK);
         Coordinates coordinates = new Coordinates(7, 3);
         Piece friendlyBishop = new Bishop(PlayerColour.BLACK);
@@ -46,7 +45,7 @@ public class BishopTest {
         board.placePiece(coordinates, bishop);
         board.placePiece(friendlyCoordinates, friendlyBishop);
 
-        List<Move> moves = bishop.getAllowedMoves(coordinates, board);
+        List<Move> moves = bishop.getAllowedMoves(coordinates, game);
 
         assertThat(moves).doesNotContain(
                 new Move(coordinates, friendlyCoordinates),
@@ -57,6 +56,7 @@ public class BishopTest {
     @Test
     public void bishopCanCaptureEnemyPiece() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece bishop = new Bishop(PlayerColour.BLACK);
         Coordinates coordinates = new Coordinates(7, 3);
         Piece enemyBishop = new Bishop(PlayerColour.WHITE);
@@ -64,7 +64,7 @@ public class BishopTest {
         board.placePiece(coordinates, bishop);
         board.placePiece(enemyCoord, enemyBishop);
 
-        List<Move> moves = bishop.getAllowedMoves(coordinates, board);
+        List<Move> moves = bishop.getAllowedMoves(coordinates, game);
 
         assertThat(moves).contains(new Move(coordinates, enemyCoord));
     }
@@ -72,6 +72,7 @@ public class BishopTest {
     @Test
     public void bishopBlockedByEnemyPiece() {
         Board board = Board.empty();
+        Game game = new Game(board);
 
         Piece bishop = new Bishop(PlayerColour.BLACK);
         Piece enemyBishop = new Bishop(PlayerColour.WHITE);
@@ -85,7 +86,7 @@ public class BishopTest {
         board.placePiece(enemyCoord, enemyBishop);
         board.placePiece(enemyCoord2, enemyBishop2);
 
-        List<Move> moves = bishop.getAllowedMoves(coordinates, board);
+        List<Move> moves = bishop.getAllowedMoves(coordinates, game);
 
         assertThat(moves)
                 .doesNotContain(new Move(coordinates, enemyCoord2))

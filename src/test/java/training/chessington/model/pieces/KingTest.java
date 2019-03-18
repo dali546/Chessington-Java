@@ -1,10 +1,7 @@
 package training.chessington.model.pieces;
 
 import org.junit.Test;
-import training.chessington.model.Board;
-import training.chessington.model.Coordinates;
-import training.chessington.model.Move;
-import training.chessington.model.PlayerColour;
+import training.chessington.model.*;
 
 import java.util.List;
 
@@ -15,32 +12,34 @@ public class KingTest {
     @Test
     public void kingCanMove1Square() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece king = new King(PlayerColour.WHITE);
-        Coordinates coordinates = new Coordinates(3,3);
-        board.placePiece(coordinates,king);
+        Coordinates coordinates = new Coordinates(3, 3);
+        board.placePiece(coordinates, king);
 
-        List<Move> moves = king.getAllowedMoves(coordinates,board);
+        List<Move> moves = king.getAllowedMoves(coordinates, game);
 
         assertThat(moves).contains(
-                new Move(coordinates, coordinates.plus(1,0)),
-                new Move(coordinates, coordinates.plus(1,1)),
-                new Move(coordinates, coordinates.plus(1,-1)),
-                new Move(coordinates, coordinates.plus(0,1)),
-                new Move(coordinates, coordinates.plus(0,-1)),
-                new Move(coordinates, coordinates.plus(-1,0)),
-                new Move(coordinates, coordinates.plus(-1,1)),
-                new Move(coordinates, coordinates.plus(-1,-1))
+                new Move(coordinates, coordinates.plus(1, 0)),
+                new Move(coordinates, coordinates.plus(1, 1)),
+                new Move(coordinates, coordinates.plus(1, -1)),
+                new Move(coordinates, coordinates.plus(0, 1)),
+                new Move(coordinates, coordinates.plus(0, -1)),
+                new Move(coordinates, coordinates.plus(-1, 0)),
+                new Move(coordinates, coordinates.plus(-1, 1)),
+                new Move(coordinates, coordinates.plus(-1, -1))
         );
     }
 
     @Test
     public void kingCannotMoveOffBoard() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece king = new King(PlayerColour.WHITE);
         Coordinates coord = new Coordinates(7, 1);
         board.placePiece(coord, king);
 
-        List<Move> moves = king.getAllowedMoves(coord, board);
+        List<Move> moves = king.getAllowedMoves(coord, game);
 
         assertThat(moves).containsExactlyInAnyOrder(
                 new Move(coord, coord.plus(-1, -1)),
@@ -54,6 +53,7 @@ public class KingTest {
     @Test
     public void kingCannotCaptureFriend() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece king = new King(PlayerColour.WHITE);
         Piece friendlyPawn = new Pawn(PlayerColour.WHITE);
         Coordinates coord = new Coordinates(3, 3);
@@ -61,7 +61,7 @@ public class KingTest {
         board.placePiece(coord, king);
         board.placePiece(pawnCoord, friendlyPawn);
 
-        List<Move> moves = king.getAllowedMoves(coord, board);
+        List<Move> moves = king.getAllowedMoves(coord, game);
 
         assertThat(moves).doesNotContain(
                 new Move(coord, pawnCoord)
@@ -71,6 +71,7 @@ public class KingTest {
     @Test
     public void kingCanEatEnemy() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece king = new King(PlayerColour.WHITE);
         Piece enemyPiece = new Pawn(PlayerColour.BLACK);
         Coordinates coord = new Coordinates(3, 3);
@@ -78,7 +79,7 @@ public class KingTest {
         board.placePiece(coord, king);
         board.placePiece(pawnCoord, enemyPiece);
 
-        List<Move> moves = king.getAllowedMoves(coord, board);
+        List<Move> moves = king.getAllowedMoves(coord, game);
 
         assertThat(moves).contains(
                 new Move(coord, pawnCoord)

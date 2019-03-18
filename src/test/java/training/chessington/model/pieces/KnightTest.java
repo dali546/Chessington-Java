@@ -1,26 +1,24 @@
 package training.chessington.model.pieces;
 
 import org.junit.Test;
-import training.chessington.model.Board;
-import training.chessington.model.Coordinates;
-import training.chessington.model.Move;
-import training.chessington.model.PlayerColour;
+import training.chessington.model.*;
 
 import java.util.List;
 
-import static training.chessington.model.pieces.PieceAssert.*;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class KnightTest {
 
     @Test
     public void knightCannotMoveOffBoard() {
         Board board = Board.empty();
+        Game game = new Game(board);
+
         Piece knight = new Knight(PlayerColour.WHITE);
         Coordinates coord = new Coordinates(7, 1);
         board.placePiece(coord, knight);
 
-        List<Move> moves = knight.getAllowedMoves(coord, board);
+        List<Move> moves = knight.getAllowedMoves(coord, game);
 
         assertThat(moves).containsExactlyInAnyOrder(
                 new Move(coord, coord.plus(-2, 1)),
@@ -32,11 +30,13 @@ public class KnightTest {
     @Test
     public void knightCanHave8Moves() {
         Board board = Board.empty();
+        Game game = new Game(board);
+
         Piece knight = new Knight(PlayerColour.WHITE);
         Coordinates coord = new Coordinates(3, 3);
         board.placePiece(coord, knight);
 
-        List<Move> moves = knight.getAllowedMoves(coord, board);
+        List<Move> moves = knight.getAllowedMoves(coord, game);
 
         assertThat(moves).containsExactlyInAnyOrder(
                 new Move(coord, coord.plus(2, 1)),
@@ -53,6 +53,8 @@ public class KnightTest {
     @Test
     public void knightCannotCaptureFriend() {
         Board board = Board.empty();
+        Game game = new Game(board);
+
         Piece knight = new Knight(PlayerColour.WHITE);
         Piece friendlyPawn = new Pawn(PlayerColour.WHITE);
         Coordinates coord = new Coordinates(3, 3);
@@ -60,7 +62,7 @@ public class KnightTest {
         board.placePiece(coord, knight);
         board.placePiece(pawnCoord, friendlyPawn);
 
-        List<Move> moves = knight.getAllowedMoves(coord, board);
+        List<Move> moves = knight.getAllowedMoves(coord, game);
 
         assertThat(moves).doesNotContain(
                 new Move(coord, pawnCoord)
@@ -70,6 +72,8 @@ public class KnightTest {
     @Test
     public void knightCanEatEnemy() {
         Board board = Board.empty();
+        Game game = new Game(board);
+
         Piece knight = new Knight(PlayerColour.WHITE);
         Piece enemyPiece = new Pawn(PlayerColour.BLACK);
         Coordinates coord = new Coordinates(3, 3);
@@ -77,7 +81,7 @@ public class KnightTest {
         board.placePiece(coord, knight);
         board.placePiece(pawnCoord, enemyPiece);
 
-        List<Move> moves = knight.getAllowedMoves(coord, board);
+        List<Move> moves = knight.getAllowedMoves(coord, game);
 
         assertThat(moves).contains(
                 new Move(coord, pawnCoord)

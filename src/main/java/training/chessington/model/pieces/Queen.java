@@ -1,9 +1,6 @@
 package training.chessington.model.pieces;
 
-import training.chessington.model.Board;
-import training.chessington.model.Coordinates;
-import training.chessington.model.Move;
-import training.chessington.model.PlayerColour;
+import training.chessington.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,9 +11,11 @@ public class Queen extends AbstractPiece {
     }
 
     @Override
-    public List<Move> getAllowedMoves(Coordinates from, Board board) {
-        List<Move> moves = new Rook(colour).getAllowedMoves(from,board);
-        moves.addAll(new Bishop(colour).getAllowedMoves(from,board));
+    public List<Move> getAllowedMoves(Coordinates from, Game game) {
+        List<Move> moves = new Rook(colour).getAllowedMoves(from, game);
+
+        moves.addAll(new Bishop(colour).getAllowedMoves(from, game));
+
         return moves;
     }
 }

@@ -1,10 +1,7 @@
 package training.chessington.model.pieces;
 
 import org.junit.Test;
-import training.chessington.model.Board;
-import training.chessington.model.Coordinates;
-import training.chessington.model.Move;
-import training.chessington.model.PlayerColour;
+import training.chessington.model.*;
 
 import java.util.List;
 
@@ -15,11 +12,12 @@ public class RookTest {
     @Test
     public void rookCanMoveOnAnEmptyBoard() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece rook = new Rook(PlayerColour.BLACK);
         Coordinates coordinates = new Coordinates(2, 2);
         board.placePiece(coordinates, rook);
 
-        List<Move> moves = rook.getAllowedMoves(coordinates, board);
+        List<Move> moves = rook.getAllowedMoves(coordinates, game);
 
         assertThat(moves).contains(new Move(coordinates, coordinates.plus(4, 0)));
         assertThat(moves).containsExactlyInAnyOrder(
@@ -43,6 +41,7 @@ public class RookTest {
     @Test
     public void rookBlockedByFriendly() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece rook = new Rook(PlayerColour.BLACK);
         Coordinates coordinates = new Coordinates(7, 3);
         Piece friendlyRook = new Rook(PlayerColour.BLACK);
@@ -50,7 +49,7 @@ public class RookTest {
         board.placePiece(coordinates, rook);
         board.placePiece(friendlyCoordinates, friendlyRook);
 
-        List<Move> moves = rook.getAllowedMoves(coordinates, board);
+        List<Move> moves = rook.getAllowedMoves(coordinates, game);
 
         assertThat(moves).doesNotContain(
                 new Move(coordinates, friendlyCoordinates),
@@ -63,6 +62,7 @@ public class RookTest {
     @Test
     public void rookCanCaptureEnemyPiece() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece rook = new Rook(PlayerColour.BLACK);
         Coordinates coordinates = new Coordinates(7, 3);
         Piece enemyRook = new Rook(PlayerColour.WHITE);
@@ -70,7 +70,7 @@ public class RookTest {
         board.placePiece(coordinates, rook);
         board.placePiece(enemyCoord, enemyRook);
 
-        List<Move> moves = rook.getAllowedMoves(coordinates, board);
+        List<Move> moves = rook.getAllowedMoves(coordinates, game);
 
         assertThat(moves).contains(new Move(coordinates, enemyCoord));
     }
@@ -78,6 +78,7 @@ public class RookTest {
     @Test
     public void rookBlockedByEnemyPiece() {
         Board board = Board.empty();
+        Game game = new Game(board);
 
         Piece rook = new Rook(PlayerColour.BLACK);
         Piece enemyRook = new Rook(PlayerColour.WHITE);
@@ -91,7 +92,7 @@ public class RookTest {
         board.placePiece(enemyCoord, enemyRook);
         board.placePiece(enemyCoord2, enemyRook2);
 
-        List<Move> moves = rook.getAllowedMoves(coordinates, board);
+        List<Move> moves = rook.getAllowedMoves(coordinates, game);
 
         assertThat(moves)
                 .doesNotContain(new Move(coordinates, enemyCoord2))

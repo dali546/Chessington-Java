@@ -13,28 +13,36 @@ public class Pawn extends AbstractPiece {
     }
 
     @Override
-    public List<Move> getAllowedMoves(Coordinates from, Board board) {
-        Move MOVE_1 = new Move(from, from.plus(colour == PlayerColour.WHITE ? -1 : 1, 0));
-        Move MOVE_2 = new Move(from, from.plus(colour == PlayerColour.WHITE ? -2 : 2, 0));
-        Move MOVE_CAPTURE_RIGHT = new Move(from, colour == PlayerColour.WHITE ? from.plus(-1, 1) : from.plus(1, -1));
-        Move MOVE_CAPTURE_LEFT = new Move(from, colour == PlayerColour.WHITE ? from.plus(-1, -1) : from.plus(1, 1));
+    public List<Move> getAllowedMoves(Coordinates from, Game game) {
+        Board board = game.getBoard();
+        Move lastMove = game.getMoveHistory().isEmpty() ? null : game.getMoveHistory().get(game.getMoveHistory().size() - 1);
         List<Move> moves = new ArrayList<>();
-        if (pieceNotObstructedOffsetXY(board, from.plus(colourise(1), 0))) moves.add(MOVE_1);
-        if (pawnAtStartPosition(from, board)) moves.add(MOVE_2);
-        if (canCaptureEnemyRight(from, board)) moves.add(MOVE_CAPTURE_RIGHT);
-        if (canCaptureEnemyLeft(from, board)) moves.add(MOVE_CAPTURE_LEFT);
+
+        if (pieceNotObstructedOffsetXY(board, from.plus(colourise(1), 0)))
+            moves.add(new Move(from, from.plus(colour == PlayerColour.WHITE ? -1 : 1, 0)));
+        if (pawnAtStartPosition(from, board))
+            moves.add(new Move(from, from.plus(colour == PlayerColour.WHITE ? -2 : 2, 0)));
+        if (canCaptureEnemy(from, board, -1))
+            moves.add(new Move(from, colour == PlayerColour.WHITE ? from.plus(-1, 1) : from.plus(1, -1)));
+        if (canCaptureEnemy(from, board, 1))
+            moves.add(new Move(from, colour == PlayerColour.WHITE ? from.plus(-1, -1) : from.plus(1, 1)));
+        if (canEnPassant(lastMove, from, board)) moves.add(new Move(from, lastMove.getTo().plus(colourise(1), 0)));
         if (!board.isNotOutOfBound(from)) moves.clear();
         return moves;
     }
 
-    private boolean canCaptureEnemyLeft(Coordinates from, Board board) {
-        Coordinates captureLeft = from.plus(colourise(1), colourise(1));
-        return board.isNotOutOfBound(captureLeft) && board.get(captureLeft) != null && board.get(captureLeft).getColour() != colour;
+    private boolean canEnPassant(Move move, Coordinates from, Board board) {
+        return move != null && //NOT START OF GAME
+                move.getTo().equals(move.getFrom().plus(colourise(-2), 0)) && //MOVED TWO SPACES FORWARD
+                (colour == PlayerColour.WHITE ? move.getFrom().getRow() == 1 : move.getFrom().getRow() == 6) && //MOVED FROM START
+                (move.getTo().plus(0, 1).equals(from) || move.getTo().plus(0, -1).equals(from)) && //TO RIGHT OR LEFT OF THIS
+                (board.get(move.getTo()).getType() == PieceType.PAWN && board.get(move.getTo()).getColour() != colour) && //ENEMY PIECE & PAWN
+                board.get(move.getTo().plus(colourise(1), 0)) == null; //DESTINATION IS NULL
     }
 
-    private boolean canCaptureEnemyRight(Coordinates from, Board board) {
-        Coordinates captureRight = from.plus(colourise(1), colourise(-1));
-        return board.isNotOutOfBound(captureRight) && board.get(captureRight) != null && board.get(captureRight).getColour() != colour;
+    private boolean canCaptureEnemy(Coordinates from, Board board, final int offset) {
+        Coordinates capture = from.plus(colourise(1), colourise(offset));
+        return board.isNotOutOfBound(capture) && board.get(capture) != null && board.get(capture).getColour() != colour;
     }
 
     private boolean pawnAtStartPosition(Coordinates from, Board board) {

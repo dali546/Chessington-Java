@@ -39,7 +39,7 @@ public abstract class AbstractPiece implements Piece {
         return board.isNotOutOfBound(coords) && board.get(coords).getColour() != colour;
     }
 
-    int colourise(int offset) {
+    protected int colourise(int offset) {
         return colour == PlayerColour.WHITE ? -offset : offset;
     }
 
@@ -62,5 +62,4 @@ public abstract class AbstractPiece implements Piece {
         if (pieceNotObstructedOffsetXY(board, coords)) return true;
         return enemyPieceAtOffsetXY(board, coords);
     }
-
 }

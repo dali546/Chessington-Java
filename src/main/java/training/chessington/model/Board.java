@@ -46,6 +46,10 @@ public class Board {
         board[from.getRow()][from.getCol()] = null;
     }
 
+    public void eat(Coordinates square) {
+        board[square.getRow()][square.getCol()] = null;
+    }
+
     public void placePiece(Coordinates coords, Piece piece) {
         board[coords.getRow()][coords.getCol()] = piece;
     }

@@ -1,10 +1,7 @@
 package training.chessington.model.pieces;
 
 import org.junit.Test;
-import training.chessington.model.Board;
-import training.chessington.model.Coordinates;
-import training.chessington.model.Move;
-import training.chessington.model.PlayerColour;
+import training.chessington.model.*;
 
 import java.util.List;
 
@@ -15,6 +12,7 @@ public class QueenTest {
     @Test
     public void queenBlockedByEnemyPiece() {
         Board board = Board.empty();
+        Game game = new Game(board);
 
         Piece queen = new Queen(PlayerColour.BLACK);
         Piece enemyBishop = new Bishop(PlayerColour.WHITE);
@@ -34,7 +32,7 @@ public class QueenTest {
         board.placePiece(enemyRookCoord, enemyRook);
         board.placePiece(enemyKnightCoord, enemyKnight);
 
-        List<Move> moves = queen.getAllowedMoves(coordinates, board);
+        List<Move> moves = queen.getAllowedMoves(coordinates, game);
 
         assertThat(moves)
                 .doesNotContain(
@@ -51,6 +49,7 @@ public class QueenTest {
     @Test
     public void queenBlockedByFriendly() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece queen = new Queen(PlayerColour.BLACK);
         Piece friendPawn = new Pawn(PlayerColour.BLACK);
         Piece friendlyBishop = new Bishop(PlayerColour.BLACK);
@@ -61,7 +60,7 @@ public class QueenTest {
         board.placePiece(pawnFriend, friendPawn);
         board.placePiece(bishopFriend, friendlyBishop);
 
-        List<Move> moves = queen.getAllowedMoves(coordinates, board);
+        List<Move> moves = queen.getAllowedMoves(coordinates, game);
 
         assertThat(moves).doesNotContain(
                 new Move(coordinates, pawnFriend),
@@ -76,6 +75,7 @@ public class QueenTest {
     @Test
     public void queenCanCaptureEnemyPiece() {
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece rook = new Queen(PlayerColour.BLACK);
         Coordinates coordinates = new Coordinates(7, 3);
         Piece enemyRook = new Rook(PlayerColour.WHITE);
@@ -85,7 +85,7 @@ public class QueenTest {
         board.placePiece(coordinates, rook);
         board.placePiece(enemyCoord, enemyRook);
         board.placePiece(enemyCoord2, enemyPiece);
-        List<Move> moves = rook.getAllowedMoves(coordinates, board);
+        List<Move> moves = rook.getAllowedMoves(coordinates, game);
 
         assertThat(moves).contains(
                 new Move(coordinates, enemyCoord),
@@ -97,11 +97,12 @@ public class QueenTest {
     public void queenCanMoveOnAnEmptyBoard() {
         new BishopTest();
         Board board = Board.empty();
+        Game game = new Game(board);
         Piece queen = new Queen(PlayerColour.BLACK);
         Coordinates coordinates = new Coordinates(2, 2);
         board.placePiece(coordinates, queen);
 
-        List<Move> moves = queen.getAllowedMoves(coordinates, board);
+        List<Move> moves = queen.getAllowedMoves(coordinates, game);
 
         assertThat(moves).containsExactlyInAnyOrder(
                 new Move(coordinates, coordinates.plus(-1, -1)),

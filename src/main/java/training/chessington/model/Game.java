@@ -8,6 +8,7 @@ import java.util.List;
 public class Game {
     public static final int SIZE = 8;
     private final Board board;
+    private List<Move> moveHistory;
 
     private PlayerColour nextPlayer = PlayerColour.WHITE;
 
@@ -15,6 +16,15 @@ public class Game {
 
     public Game(Board board) {
         this.board = board;
+        moveHistory = new ArrayList<>();
+    }
+
+    public List<Move> getMoveHistory() {
+        return moveHistory;
+    }
+
+    public Board getBoard() {
+        return board;
     }
 
     public Piece pieceAt(int row, int col) {
@@ -31,7 +41,7 @@ public class Game {
             return new ArrayList<>();
         }
 
-        return piece.getAllowedMoves(from, board);
+        return piece.getAllowedMoves(from, this);
     }
 
     public void makeMove(Move move) throws InvalidMoveException {
@@ -51,12 +61,30 @@ public class Game {
             throw new InvalidMoveException(String.format("Wrong colour piece - it is %s's turn", nextPlayer));
         }
 
-        if (!piece.getAllowedMoves(move.getFrom(), board).contains(move)) {
+        if (!piece.getAllowedMoves(from, this).contains(move)) {
             throw new InvalidMoveException(String.format("Cannot move piece %s from %s to %s", piece, from, to));
         }
 
+        boolean isToEmpty = board.get(to) == null;
         board.move(from, to);
+        moveHistory.add(new Move(from, to));
+
+        Move lastMove = getMoveHistory().isEmpty() ? null : getMoveHistory().get(getMoveHistory().size() - 1);
+        if (lastMoveValidEnPassant(lastMove, piece, isToEmpty))
+            board.eat(to.plus((piece.getColour() == PlayerColour.WHITE ? 1 : -1), 0));
+
         nextPlayer = nextPlayer == PlayerColour.WHITE ? PlayerColour.BLACK : PlayerColour.WHITE;
+    }
+
+    private boolean lastMoveValidEnPassant(Move lastMove, Piece piece, boolean isEmpty) {
+        return lastMove != null && //NOT START OF GAME
+                board.get(lastMove.getTo().plus((piece.getColour() == PlayerColour.WHITE ? 1 : -1), 0)) != null && //PIECE BELOW IS NOT NULL
+                piece.getType() == Piece.PieceType.PAWN && //CURRENT PIECE IS PAWN
+                isEmpty && //TO IS EMPTY
+                board.get(lastMove.getTo().plus((piece.getColour() == PlayerColour.WHITE ? 1 : -1), 0)).getType()
+                        == Piece.PieceType.PAWN && //PIECE BELOW IS PAWN
+                board.get(lastMove.getTo().plus((piece.getColour() == PlayerColour.WHITE ? 1 : -1), 0)).getColour()
+                        != piece.getColour(); //PIECE BELOW IS ENEMY
     }
 
     public boolean isEnded() {
