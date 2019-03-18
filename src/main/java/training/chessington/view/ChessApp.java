@@ -1,13 +1,18 @@
 package training.chessington.view;
 
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import training.chessington.model.Game;
 import training.chessington.model.InvalidMoveException;
 import training.chessington.model.Move;
+import training.chessington.model.pieces.Piece;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +34,7 @@ public class ChessApp extends Parent {
     }
 
     private Square[][] squares = new Square[Game.SIZE][Game.SIZE];
+
 
     private void buildDisplayBoard() {
         grid = new GridPane();
@@ -57,6 +63,9 @@ public class ChessApp extends Parent {
         } catch (InvalidMoveException e) {
             LOGGER.error("Invalid move attempted", e);
         }
+
+        if (game.isPpRequired()) askUserForPP();
+        
         redrawPieces();
         resetHighlighting();
         validMoveSquares.clear();
@@ -65,6 +74,44 @@ public class ChessApp extends Parent {
         if (game.isEnded()) {
             showResult(game.getResult());
         }
+    }
+
+    private void askUserForPP() {
+        HBox hBox = new HBox(5);
+
+        Button queenBtn = new Button("Queenie");
+        Button popeBtn = new Button("Pope");
+        Button knightBtn = new Button("Horsie");
+        Button rookBtn = new Button("Rookie");
+
+        hBox.getChildren().addAll(queenBtn, popeBtn, knightBtn, rookBtn);
+        Scene scene = new Scene(hBox, 400, 100);
+
+        Stage stage = new Stage();
+        stage.setTitle("Pawn Promote");
+        stage.setScene(scene);
+        stage.show();
+
+        rookBtn.setOnAction(event -> {
+            game.promotePawn(Piece.PieceType.ROOK);
+            redrawPieces();
+            stage.close();
+        });
+        queenBtn.setOnAction(event -> {
+            game.promotePawn(Piece.PieceType.QUEEN);
+            redrawPieces();
+            stage.close();
+        });
+        popeBtn.setOnAction(event -> {
+            game.promotePawn(Piece.PieceType.BISHOP);
+            redrawPieces();
+            stage.close();
+        });
+        knightBtn.setOnAction(event -> {
+            game.promotePawn(Piece.PieceType.KNIGHT);
+            redrawPieces();
+            stage.close();
+        });
     }
 
     private void showResult(String result) {
